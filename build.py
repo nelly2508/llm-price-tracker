@@ -71,6 +71,9 @@ PROVIDER_PRICING_URL = {
     "Cohere": "https://cohere.com/pricing",
 }
 
+# beehiiv publication (hosted subscribe page). Change here if the publication changes.
+NEWSLETTER_URL = "https://neils-newsletter-cea45b.beehiiv.com/"
+
 
 def load_catalog():
     try:
@@ -220,6 +223,14 @@ tbody tr:hover{background:#f7faff}
 .foot h3{color:var(--ink);font-size:15px;margin:20px 0 6px}
 .foot code{background:#eef1f6;padding:2px 6px;border-radius:5px;font-family:var(--mono);font-size:12.5px}
 .disc{background:#fff8ec;border:1px solid #f3e2be;color:#7a5b16;padding:12px 14px;border-radius:10px;font-size:13px;margin-top:16px}
+.capture{display:flex;flex-wrap:wrap;gap:16px 20px;align-items:center;justify-content:space-between;background:linear-gradient(100deg,#eef3ff,#f6f0ff);border:1px solid #dfe6fb;border-radius:14px;padding:18px 20px;margin-bottom:18px}
+.capture h2{margin:0;font-size:18px}
+.capture p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.subform{display:flex;gap:8px;flex:1;min-width:280px;max-width:470px}
+.subform input{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14.5px;font-family:inherit}
+.subform button{white-space:nowrap;border:0;background:var(--accent);color:#fff;font-weight:600;font-size:14px;padding:11px 16px;border-radius:10px;cursor:pointer}
+.subform button:hover{background:#1f5be0}
+.subnote{width:100%;font-size:11.5px;color:var(--muted);margin-top:2px}
 .count{font-size:12.5px;color:var(--muted);padding:2px 2px 12px}
 @media(max-width:640px){h1{font-size:25px}.calc input{width:110px}}
 </style>
@@ -237,6 +248,17 @@ tbody tr:hover{background:#f7faff}
   <nav class="nav"><a href="#table">Comparison</a><a href="#calc">Cost calculator</a><a href="#methodology">Methodology</a><a href="data/models.json">JSON API</a></nav>
 </div></header>
 <main class="wrap">
+  <section class="capture">
+    <div class="cap-copy">
+      <h2>&#128238; Never get surprised by a price change</h2>
+      <p>One short email a week when a tracked model changes price, limits or capabilities. Free.</p>
+    </div>
+    <form id="subForm" class="subform">
+      <input id="subEmail" type="email" placeholder="you@company.com" aria-label="Email address" required>
+      <button type="submit">Get weekly alerts &rarr;</button>
+    </form>
+    <div class="subnote">Free forever &middot; unsubscribe anytime &middot; delivered via beehiiv.</div>
+  </section>
   <section class="controls">
     <div class="row">
       <div class="search">&#128269;<input id="q" type="search" placeholder="Search model or provider (e.g. claude, gemini, o3)..." autocomplete="off"></div>
@@ -340,6 +362,7 @@ document.querySelectorAll("thead th").forEach(th=>{const k=th.dataset.k;if(k==="
 $("#tVision").onclick=t=>{flags.vision=!flags.vision;$("#tVision").setAttribute("aria-pressed",flags.vision);render();};
 $("#tReason").onclick=t=>{flags.reasoning=!flags.reasoning;$("#tReason").setAttribute("aria-pressed",flags.reasoning);render();};
 $("#tCache").onclick=t=>{flags.prompt_caching=!flags.prompt_caching;$("#tCache").setAttribute("aria-pressed",flags.prompt_caching);render();};
+$("#subForm").addEventListener("submit",function(e){e.preventDefault();var em=encodeURIComponent(($("#subEmail").value||"").trim());window.open("__NEWSLETTER_URL__subscribe?email="+em,"_blank","noopener");});
 render();
 </script>
 </body>
@@ -356,7 +379,8 @@ def render_site(models, canonical):
                 .replace("__COUNT__", str(len(models)))
                 .replace("__GENERATED_ISO__", gen_iso)
                 .replace("__YEAR__", str(now.year))
-                .replace("__CANONICAL__", canonical))
+                .replace("__CANONICAL__", canonical)
+                .replace("__NEWSLETTER_URL__", NEWSLETTER_URL))
     os.makedirs("_site/data", exist_ok=True)
     os.makedirs("data", exist_ok=True)
     with open("_site/index.html", "w") as f:
