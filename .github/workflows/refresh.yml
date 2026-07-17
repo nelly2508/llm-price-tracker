@@ -1,0 +1,64 @@
+name: refresh-and-deploy
+
+on:
+  schedule:
+    - cron: "0 6 * * *"        # daily 06:00 UTC
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/**'              # auto data commits must not retrigger
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Build site from live data
+        env:
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
+        run: python build.py
+      - name: Commit refreshed data (freshness log)
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if ! git diff --cached --quiet; then
+            git commit -m "data: refresh $(date -u +%FT%TZ) [skip ci]"
+            git push
+          else
+            echo "No data changes."
+          fi
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
