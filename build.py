@@ -11,7 +11,7 @@ Data source: https://github.com/BerriAI/litellm
 Maintained autonomously by an AI agent. Pricing is aggregated from public
 sources and may lag official pricing pages - always verify before purchasing.
 """
-import json, os, urllib.request, datetime
+import json, os, re, urllib.request, datetime
 
 SOURCE_URL = "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
 LOCAL_FALLBACK = "litellm_raw.json"
@@ -99,8 +99,29 @@ def per1m(x):
     return round(x * 1_000_000, 3)
 
 
+def slugify(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def money_py(x):
+    if x is None:
+        return "&mdash;"
+    return ("$%.2f" % x) if x >= 1 else ("$%.3f" % x)
+
+
+def ctx_py(n):
+    if not n:
+        return "&mdash;"
+    if n >= 1_000_000:
+        return ("%.1fM" % (n / 1_000_000)).replace(".0M", "M")
+    if n >= 1000:
+        return "%dK" % round(n / 1000)
+    return str(n)
+
+
 def build_models(cat):
     out = []
+    _seen_slugs = set()
     for key, name, prov in ROSTER:
         v = cat.get(key)
         if not isinstance(v, dict):
@@ -112,7 +133,7 @@ def build_models(cat):
             print("  WARN no price for: %s" % key)
             continue
         blended = round((3 * inp + outp) / 4, 3)
-        out.append({
+        rec = {
             "name": name,
             "provider": prov,
             "api_id": key.split("/")[-1],
@@ -127,7 +148,13 @@ def build_models(cat):
             "function_calling": bool(v.get("supports_function_calling")),
             "prompt_caching": bool(v.get("supports_prompt_caching")),
             "pricing_url": PROVIDER_PRICING_URL.get(prov, "#"),
-        })
+        }
+        slug = slugify(rec["api_id"])
+        if slug in _seen_slugs:
+            slug = slugify(prov + "-" + rec["api_id"])
+        _seen_slugs.add(slug)
+        rec["slug"] = slug
+        out.append(rec)
     out.sort(key=lambda m: m["blended"])
     print("Built %d models across %d providers" % (len(out), len(set(m["provider"] for m in out))))
     return out
@@ -342,7 +369,7 @@ function render(){
       .map(([lab,k])=>`<span class="cap ${m[k]?'on':''}" title="${k.replace('_',' ')}">${lab}</span>`).join("");
     const tr=document.createElement("tr");
     tr.innerHTML=`
-      <td class="l"><div class="model"><span class="pill" style="background:var(--${m.provider})"></span><span><span class="mname">${m.name}</span><br><span class="mid">${m.api_id}</span></span></div></td>
+      <td class="l"><div class="model"><span class="pill" style="background:var(--${m.provider})"></span><span><span class="mname"><a href="model/${m.slug}.html" style="color:inherit;text-decoration:none">${m.name}</a></span><br><span class="mid">${m.api_id}</span></span></div></td>
       <td class="l"><a class="prov" style="color:var(--${m.provider})" href="${m.pricing_url}" target="_blank" rel="noopener noreferrer">${m.provider} &#8599;</a></td>
       <td class="num">${money(m.input)}</td>
       <td class="num">${money(m.output)}</td>
@@ -367,6 +394,67 @@ render();
 </script>
 </body>
 </html>"""
+
+
+DETAIL_PAGE = r"""<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__NAME__ API pricing, context &amp; limits (__UPDATED__)</title>
+<meta name="description" content="__DESC__">
+<link rel="canonical" href="__CANONICAL__">
+<meta property="og:type" content="article"><meta property="og:title" content="__NAME__ API pricing &amp; limits">
+<meta property="og:description" content="__DESC__">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128176;</text></svg>">
+<script type="application/ld+json">__JSONLD__</script>
+<style>
+:root{--ink:#0f1729;--muted:#5b6577;--line:#e6e9ef;--accent:#2f6df6;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+header.top{background:linear-gradient(180deg,#0f1729,#1b2540);color:#fff;padding:22px 0}
+.crumb{font-size:13px;color:#c3ccdd}.crumb a{color:#c3ccdd;text-decoration:none}
+h1{font-size:28px;margin:18px 0 4px}.sub{color:var(--muted);margin:0 0 6px}
+main{padding:8px 0 60px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.card .k{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600}
+.card .v{font-family:var(--mono);font-size:20px;margin-top:4px}
+h2{font-size:18px;margin:26px 0 10px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
+th.l,td.l{text-align:left}td.n{font-family:var(--mono)}
+th{background:#fbfcfe;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+td a{color:var(--accent);text-decoration:none}
+.cta{margin:24px 0;background:linear-gradient(100deg,#eef3ff,#f6f0ff);border:1px solid #dfe6fb;border-radius:12px;padding:16px 18px;font-weight:600}
+.cta a{color:var(--accent)}
+.foot{margin-top:22px;font-size:13px;color:var(--muted)}.foot a{color:var(--accent)}
+</style></head><body>
+<header class="top"><div class="wrap"><div class="crumb"><a href="../index.html">&#128176; LLM API Pricing Tracker</a> / __NAME__</div></div></header>
+<main class="wrap">
+<h1>__NAME__ API pricing &amp; limits</h1>
+<p class="sub">by <a href="__PROVIDER_URL__" target="_blank" rel="noopener noreferrer">__PROVIDER__ official pricing &#8599;</a> &middot; auto-updated __UPDATED__ &middot; USD per 1M tokens</p>
+<div class="cards">__PRICE_CARDS__</div>
+<div class="cta">&#128238; Track price changes for __NAME__ and every major model &mdash; <a href="__NEWSLETTER__subscribe">get the free weekly email &rarr;</a></div>
+<h2>How __NAME__ compares (blended $/1M, cheapest first)</h2>
+<table><thead><tr><th class="l">Model</th><th class="l">Provider</th><th>Input</th><th>Output</th><th>Blended</th><th>Context</th></tr></thead><tbody>
+__COMPARE_ROWS__
+</tbody></table>
+<p class="foot"><a href="../index.html">&larr; Full sortable comparison &amp; cost calculator</a> &middot; <a href="../data/models.json">Free JSON API</a> &middot; Prices aggregated from public data; verify on the provider's official page before purchasing.</p>
+</main></body></html>"""
+
+
+def _compare_rows(models, current_slug):
+    rows = []
+    for m in models:
+        hi = ' style="background:#eef3ff"' if m["slug"] == current_slug else ''
+        rows.append(
+            '<tr%s><td class="l"><a href="%s.html">%s</a></td><td class="l">%s</td>'
+            '<td class="n">%s</td><td class="n">%s</td><td class="n">%s</td><td class="n">%s</td></tr>'
+            % (hi, m["slug"], m["name"], m["provider"], money_py(m["input"]),
+               money_py(m["output"]), money_py(m["blended"]), ctx_py(m["context"]))
+        )
+    return "\n".join(rows)
 
 
 def render_site(models, canonical):
@@ -412,6 +500,52 @@ def render_site(models, canonical):
     with open("_site/llms.txt", "w") as f:
         f.write(llms)
     print("Wrote _site/index.html (%d bytes), data/models.json, _site/llms.txt" % len(html_out))
+
+    # Per-model SEO landing pages + sitemap + robots
+    os.makedirs("_site/model", exist_ok=True)
+    caps_lbl = [("vision", "Vision"), ("reasoning", "Reasoning"),
+                ("function_calling", "Function calling"), ("prompt_caching", "Prompt caching")]
+    urls = [canonical]
+    for m in models:
+        caps = ", ".join(lbl for k, lbl in caps_lbl if m.get(k)) or "text"
+        cards = "".join([
+            '<div class="card"><div class="k">Input /1M</div><div class="v">%s</div></div>' % money_py(m["input"]),
+            '<div class="card"><div class="k">Output /1M</div><div class="v">%s</div></div>' % money_py(m["output"]),
+            '<div class="card"><div class="k">Blended /1M</div><div class="v">%s</div></div>' % money_py(m["blended"]),
+            '<div class="card"><div class="k">Context</div><div class="v">%s</div></div>' % ctx_py(m["context"]),
+            '<div class="card"><div class="k">Max output</div><div class="v">%s</div></div>' % ctx_py(m["max_output"]),
+            '<div class="card"><div class="k">Cache read /1M</div><div class="v">%s</div></div>' % money_py(m.get("cache_read")),
+        ])
+        page_url = canonical + "model/" + m["slug"] + ".html"
+        desc = ("%s (%s) API pricing: %s input, %s output per 1M tokens, %s context. "
+                "Capabilities: %s. Compare against every major model." % (
+                    m["name"], m["provider"], money_py(m["input"]), money_py(m["output"]),
+                    ctx_py(m["context"]), caps)).replace("&mdash;", "-")
+        jsonld = json.dumps({"@context": "https://schema.org", "@type": "Product",
+                             "name": m["name"] + " API", "brand": {"@type": "Brand", "name": m["provider"]},
+                             "description": desc, "url": page_url})
+        html_d = (DETAIL_PAGE
+                  .replace("__NAME__", m["name"]).replace("__PROVIDER_URL__", m["pricing_url"])
+                  .replace("__PROVIDER__", m["provider"]).replace("__UPDATED__", updated)
+                  .replace("__DESC__", desc).replace("__CANONICAL__", page_url)
+                  .replace("__JSONLD__", jsonld).replace("__PRICE_CARDS__", cards)
+                  .replace("__COMPARE_ROWS__", _compare_rows(models, m["slug"]))
+                  .replace("__NEWSLETTER__", NEWSLETTER_URL))
+        with open("_site/model/%s.html" % m["slug"], "w") as f:
+            f.write(html_d)
+        urls.append(page_url)
+
+    today = now.strftime("%Y-%m-%d")
+    sm = ['<?xml version="1.0" encoding="UTF-8"?>',
+          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in urls:
+        sm.append("<url><loc>%s</loc><lastmod>%s</lastmod></url>" % (u, today))
+    sm.append("</urlset>")
+    with open("_site/sitemap.xml", "w") as f:
+        f.write("\n".join(sm))
+    with open("_site/robots.txt", "w") as f:
+        f.write("User-agent: *\nAllow: /\nSitemap: %ssitemap.xml\n" % canonical)
+    print("Wrote %d model pages + sitemap.xml + robots.txt" % len(models))
 
 
 if __name__ == "__main__":
