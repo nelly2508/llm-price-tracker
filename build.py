@@ -74,6 +74,13 @@ PROVIDER_PRICING_URL = {
 # beehiiv publication (hosted subscribe page). Change here if the publication changes.
 NEWSLETTER_URL = "https://neils-newsletter-cea45b.beehiiv.com/"
 
+# Google Analytics 4 measurement tag.
+GA_ID = "G-NZMTZ9JS2L"
+GA_SNIPPET = (
+    '<script async src="https://www.googletagmanager.com/gtag/js?id=%s"></script>'
+    '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
+    "gtag('js',new Date());gtag('config','%s');</script>" % (GA_ID, GA_ID))
+
 
 def load_catalog():
     try:
@@ -178,6 +185,7 @@ PAGE = r"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128176;</text></svg>">
+__GA__
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset","name":"LLM API Pricing Tracker","description":"Live comparison of large language model API pricing, context windows and capabilities across major providers.","creator":{"@type":"Organization","name":"LLM API Pricing Tracker"},"dateModified":"__GENERATED_ISO__","distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"__CANONICAL__data/models.json"}}
 </script>
@@ -407,6 +415,7 @@ DETAIL_PAGE = r"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128176;</text></svg>">
+__GA__
 <script type="application/ld+json">__JSONLD__</script>
 <style>
 :root{--ink:#0f1729;--muted:#5b6577;--line:#e6e9ef;--accent:#2f6df6;--mono:'JetBrains Mono',ui-monospace,monospace}
@@ -468,7 +477,8 @@ def render_site(models, canonical):
                 .replace("__GENERATED_ISO__", gen_iso)
                 .replace("__YEAR__", str(now.year))
                 .replace("__CANONICAL__", canonical)
-                .replace("__NEWSLETTER_URL__", NEWSLETTER_URL))
+                .replace("__NEWSLETTER_URL__", NEWSLETTER_URL)
+                .replace("__GA__", GA_SNIPPET))
     os.makedirs("_site/data", exist_ok=True)
     os.makedirs("data", exist_ok=True)
     with open("_site/index.html", "w") as f:
@@ -530,7 +540,8 @@ def render_site(models, canonical):
                   .replace("__DESC__", desc).replace("__CANONICAL__", page_url)
                   .replace("__JSONLD__", jsonld).replace("__PRICE_CARDS__", cards)
                   .replace("__COMPARE_ROWS__", _compare_rows(models, m["slug"]))
-                  .replace("__NEWSLETTER__", NEWSLETTER_URL))
+                  .replace("__NEWSLETTER__", NEWSLETTER_URL)
+                  .replace("__GA__", GA_SNIPPET))
         with open("_site/model/%s.html" % m["slug"], "w") as f:
             f.write(html_d)
         urls.append(page_url)
