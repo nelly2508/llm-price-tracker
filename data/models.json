@@ -1,8 +1,25 @@
 {
   "source": "https://github.com/BerriAI/litellm",
   "unit": "USD per 1,000,000 tokens",
-  "count": 32,
+  "count": 36,
   "models": [
+    {
+      "name": "GPT-5 nano",
+      "provider": "OpenAI",
+      "api_id": "gpt-5-nano",
+      "input": 0.05,
+      "output": 0.4,
+      "cache_read": 0.005,
+      "blended": 0.138,
+      "context": 272000,
+      "max_output": 128000,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://openai.com/api/pricing/",
+      "slug": "gpt-5-nano"
+    },
     {
       "name": "Gemini 2.5 Flash-Lite",
       "provider": "Google",
@@ -72,6 +89,23 @@
       "slug": "command-r"
     },
     {
+      "name": "Grok 4.1 Fast",
+      "provider": "xAI",
+      "api_id": "grok-4-1-fast",
+      "input": 0.2,
+      "output": 0.5,
+      "cache_read": 0.05,
+      "blended": 0.275,
+      "context": 2000000.0,
+      "max_output": 2000000.0,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://docs.x.ai/docs/models",
+      "slug": "grok-4-1-fast"
+    },
+    {
       "name": "DeepSeek V3.2",
       "provider": "DeepSeek",
       "api_id": "deepseek-v3.2",
@@ -121,6 +155,23 @@
       "prompt_caching": true,
       "pricing_url": "https://api-docs.deepseek.com/quick_start/pricing",
       "slug": "deepseek-v4-pro"
+    },
+    {
+      "name": "Gemini 3.1 Flash-Lite",
+      "provider": "Google",
+      "api_id": "gemini-3.1-flash-lite",
+      "input": 0.25,
+      "output": 1.5,
+      "cache_read": 0.025,
+      "blended": 0.562,
+      "context": 1048576,
+      "max_output": 65536,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "slug": "gemini-3-1-flash-lite"
     },
     {
       "name": "Mistral Large 3",
@@ -325,6 +376,23 @@
       "prompt_caching": true,
       "pricing_url": "https://openai.com/api/pricing/",
       "slug": "gpt-4-1"
+    },
+    {
+      "name": "o3",
+      "provider": "OpenAI",
+      "api_id": "o3",
+      "input": 2.0,
+      "output": 8.0,
+      "cache_read": 0.5,
+      "blended": 3.5,
+      "context": 200000,
+      "max_output": 100000,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://openai.com/api/pricing/",
+      "slug": "o3"
     },
     {
       "name": "Claude Sonnet 5",
