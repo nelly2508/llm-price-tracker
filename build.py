@@ -26,8 +26,10 @@ ROSTER = [
     ("gpt-4.1", "GPT-4.1", "OpenAI"),
     ("gpt-4o", "GPT-4o", "OpenAI"),
     ("gpt-4o-mini", "GPT-4o mini", "OpenAI"),
+    ("o3", "o3", "OpenAI"),
     ("o1", "o1", "OpenAI"),
     ("o3-mini", "o3-mini", "OpenAI"),
+    ("gpt-5-nano", "GPT-5 nano", "OpenAI"),
     # Anthropic
     ("claude-opus-4-8", "Claude Opus 4.8", "Anthropic"),
     ("claude-sonnet-5", "Claude Sonnet 5", "Anthropic"),
@@ -40,9 +42,11 @@ ROSTER = [
     ("gemini/gemini-2.5-pro", "Gemini 2.5 Pro", "Google"),
     ("gemini/gemini-2.5-flash", "Gemini 2.5 Flash", "Google"),
     ("gemini/gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite", "Google"),
+    ("gemini/gemini-3.1-flash-lite", "Gemini 3.1 Flash-Lite", "Google"),
     # xAI
     ("xai/grok-4.5", "Grok 4.5", "xAI"),
     ("xai/grok-4.3", "Grok 4.3", "xAI"),
+    ("xai/grok-4-1-fast", "Grok 4.1 Fast", "xAI"),
     ("xai/grok-4", "Grok 4", "xAI"),
     ("xai/grok-3", "Grok 3", "xAI"),
     # Mistral
