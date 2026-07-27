@@ -293,6 +293,23 @@
       "slug": "magistral-medium-latest"
     },
     {
+      "name": "Gemini 3.6 Flash",
+      "provider": "Google",
+      "api_id": "gemini-3.6-flash",
+      "input": 1.5,
+      "output": 7.5,
+      "cache_read": 0.15,
+      "blended": 3.0,
+      "context": 1048576,
+      "max_output": 65536,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "slug": "gemini-3-6-flash"
+    },
+    {
       "name": "Grok 4.5",
       "provider": "xAI",
       "api_id": "grok-4.5",
@@ -325,23 +342,6 @@
       "prompt_caching": false,
       "pricing_url": "https://mistral.ai/pricing#api-pricing",
       "slug": "mistral-medium-3-5"
-    },
-    {
-      "name": "Gemini 3.5 Flash",
-      "provider": "Google",
-      "api_id": "gemini-3.5-flash",
-      "input": 1.5,
-      "output": 9.0,
-      "cache_read": 0.15,
-      "blended": 3.375,
-      "context": 1048576,
-      "max_output": 65535,
-      "vision": true,
-      "reasoning": true,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://ai.google.dev/gemini-api/docs/pricing",
-      "slug": "gemini-3-5-flash"
     },
     {
       "name": "Gemini 2.5 Pro",
@@ -531,6 +531,23 @@
       "slug": "grok-3"
     },
     {
+      "name": "Claude Opus 5",
+      "provider": "Anthropic",
+      "api_id": "claude-opus-5",
+      "input": 5.0,
+      "output": 25.0,
+      "cache_read": 0.5,
+      "blended": 10.0,
+      "context": 1000000,
+      "max_output": 128000,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://www.anthropic.com/pricing#api",
+      "slug": "claude-opus-5"
+    },
+    {
       "name": "Claude Opus 4.8",
       "provider": "Anthropic",
       "api_id": "claude-opus-4-8",
@@ -546,23 +563,6 @@
       "prompt_caching": true,
       "pricing_url": "https://www.anthropic.com/pricing#api",
       "slug": "claude-opus-4-8"
-    },
-    {
-      "name": "Claude Opus 4.5",
-      "provider": "Anthropic",
-      "api_id": "claude-opus-4-5",
-      "input": 5.0,
-      "output": 25.0,
-      "cache_read": 0.5,
-      "blended": 10.0,
-      "context": 200000,
-      "max_output": 64000,
-      "vision": true,
-      "reasoning": true,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://www.anthropic.com/pricing#api",
-      "slug": "claude-opus-4-5"
     },
     {
       "name": "GPT-5.6",
