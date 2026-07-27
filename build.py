@@ -31,14 +31,14 @@ ROSTER = [
     ("o3-mini", "o3-mini", "OpenAI"),
     ("gpt-5-nano", "GPT-5 nano", "OpenAI"),
     # Anthropic
+    ("claude-opus-5", "Claude Opus 5", "Anthropic"),
     ("claude-opus-4-8", "Claude Opus 4.8", "Anthropic"),
     ("claude-sonnet-5", "Claude Sonnet 5", "Anthropic"),
     ("claude-sonnet-4-5", "Claude Sonnet 4.5", "Anthropic"),
     ("claude-haiku-4-5", "Claude Haiku 4.5", "Anthropic"),
-    ("claude-opus-4-5", "Claude Opus 4.5", "Anthropic"),
     # Google
     ("gemini/gemini-3.1-pro-preview", "Gemini 3.1 Pro", "Google"),
-    ("gemini/gemini-3.5-flash", "Gemini 3.5 Flash", "Google"),
+    ("gemini/gemini-3.6-flash", "Gemini 3.6 Flash", "Google"),
     ("gemini/gemini-2.5-pro", "Gemini 2.5 Pro", "Google"),
     ("gemini/gemini-2.5-flash", "Gemini 2.5 Flash", "Google"),
     ("gemini/gemini-2.5-flash-lite", "Gemini 2.5 Flash-Lite", "Google"),
