@@ -315,7 +315,7 @@
       "api_id": "grok-4.5",
       "input": 2.0,
       "output": 6.0,
-      "cache_read": 0.5,
+      "cache_read": 0.3,
       "blended": 3.0,
       "context": 500000,
       "max_output": 500000,
