@@ -531,6 +531,23 @@
       "slug": "grok-3"
     },
     {
+      "name": "GPT-5.6",
+      "provider": "OpenAI",
+      "api_id": "gpt-5.6",
+      "input": 4.0,
+      "output": 20.0,
+      "cache_read": 0.4,
+      "blended": 8.0,
+      "context": 922000,
+      "max_output": 128000,
+      "vision": true,
+      "reasoning": true,
+      "function_calling": true,
+      "prompt_caching": true,
+      "pricing_url": "https://openai.com/api/pricing/",
+      "slug": "gpt-5-6"
+    },
+    {
       "name": "Claude Opus 5",
       "provider": "Anthropic",
       "api_id": "claude-opus-5",
@@ -563,23 +580,6 @@
       "prompt_caching": true,
       "pricing_url": "https://www.anthropic.com/pricing#api",
       "slug": "claude-opus-4-8"
-    },
-    {
-      "name": "GPT-5.6",
-      "provider": "OpenAI",
-      "api_id": "gpt-5.6",
-      "input": 5.0,
-      "output": 30.0,
-      "cache_read": 0.5,
-      "blended": 11.25,
-      "context": 922000,
-      "max_output": 128000,
-      "vision": true,
-      "reasoning": true,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://openai.com/api/pricing/",
-      "slug": "gpt-5-6"
     },
     {
       "name": "GPT-5.5",
