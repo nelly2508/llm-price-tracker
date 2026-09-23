@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/BerriAI/litellm",
   "unit": "USD per 1,000,000 tokens",
-  "count": 36,
+  "count": 31,
   "models": [
     {
       "name": "GPT-5 nano",
@@ -53,23 +53,6 @@
       "prompt_caching": true,
       "pricing_url": "https://openai.com/api/pricing/",
       "slug": "gpt-4o-mini"
-    },
-    {
-      "name": "Command R",
-      "provider": "Cohere",
-      "api_id": "command-r",
-      "input": 0.15,
-      "output": 0.6,
-      "cache_read": null,
-      "blended": 0.262,
-      "context": 128000,
-      "max_output": 4096,
-      "vision": false,
-      "reasoning": false,
-      "function_calling": true,
-      "prompt_caching": false,
-      "pricing_url": "https://cohere.com/pricing",
-      "slug": "command-r"
     },
     {
       "name": "DeepSeek V3.2",
@@ -223,57 +206,6 @@
       "prompt_caching": true,
       "pricing_url": "https://docs.x.ai/docs/models",
       "slug": "grok-4-3"
-    },
-    {
-      "name": "Grok 4.1 Fast",
-      "provider": "xAI",
-      "api_id": "grok-4-1-fast",
-      "input": 1.25,
-      "output": 2.5,
-      "cache_read": 0.2,
-      "blended": 1.562,
-      "context": 2000000.0,
-      "max_output": 2000000.0,
-      "vision": true,
-      "reasoning": true,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://docs.x.ai/docs/models",
-      "slug": "grok-4-1-fast"
-    },
-    {
-      "name": "Grok 4",
-      "provider": "xAI",
-      "api_id": "grok-4",
-      "input": 1.25,
-      "output": 2.5,
-      "cache_read": 0.2,
-      "blended": 1.562,
-      "context": 256000,
-      "max_output": 256000,
-      "vision": false,
-      "reasoning": false,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://docs.x.ai/docs/models",
-      "slug": "grok-4"
-    },
-    {
-      "name": "Grok 3",
-      "provider": "xAI",
-      "api_id": "grok-3",
-      "input": 1.25,
-      "output": 2.5,
-      "cache_read": 0.2,
-      "blended": 1.562,
-      "context": 131072,
-      "max_output": 131072,
-      "vision": false,
-      "reasoning": false,
-      "function_calling": true,
-      "prompt_caching": true,
-      "pricing_url": "https://docs.x.ai/docs/models",
-      "slug": "grok-3"
     },
     {
       "name": "o3-mini",
@@ -478,23 +410,6 @@
       "prompt_caching": false,
       "pricing_url": "https://cohere.com/pricing",
       "slug": "command-a-03-2025"
-    },
-    {
-      "name": "Command R+",
-      "provider": "Cohere",
-      "api_id": "command-r-plus",
-      "input": 2.5,
-      "output": 10.0,
-      "cache_read": null,
-      "blended": 4.375,
-      "context": 128000,
-      "max_output": 4096,
-      "vision": false,
-      "reasoning": false,
-      "function_calling": true,
-      "prompt_caching": false,
-      "pricing_url": "https://cohere.com/pricing",
-      "slug": "command-r-plus"
     },
     {
       "name": "Gemini 3.1 Pro",
